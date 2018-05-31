@@ -6,10 +6,10 @@ public class CiudadesDTO {
 	private String City;
 	private String Country;
 	private String Postal_Code;
-	private String Latitude;
-	private String Longitude;
+	private Double Latitude;
+	private Double Longitude;
 
-	public CiudadesDTO(int id, String City, String Country, String Postal_Code, String Latitude, String Longitude) {
+	public CiudadesDTO(int id, String City, String Country, String Postal_Code, Double Latitude, Double Longitude) {
 		super();
 		this.id = id;
 		this.City = City;
@@ -50,22 +50,22 @@ public class CiudadesDTO {
 	}
 
 
-	public String getLatitude() {
+	public double getLatitude() {
 		return Latitude;
 	}
 
 
-	public void setLatitude(String latitude) {
+	public void setLatitude(Double latitude) {
 		Latitude = latitude;
 	}
 
 
-	public String getLongitude() {
+	public Double getLongitude() {
 		return Longitude;
 	}
 
 
-	public void setLongitude(String longitude) {
+	public void setLongitude(Double longitude) {
 		Longitude = longitude;
 	}
 

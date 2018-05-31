@@ -30,8 +30,8 @@ public class CargarXML {
 				//Se obtiene cada nodo
 				Element node = (Element)list.get(i);
 				listaCiudades.add(new CiudadesDTO((Integer.parseInt(node.getChildText("id"))), node.getChildText("City"), 
-						node.getChildText("Country"), node.getChildText("Postal_Code") , node.getChildText("Latitude") , 
-						node.getChildText("Longitude")));
+						node.getChildText("Country"), node.getChildText("Postal_Code") ,Double.parseDouble(node.getChildText("Latitude")) , 
+						Double.parseDouble(node.getChildText("Longitude"))));
 			}
 			
 		} catch ( IOException | JDOMException io ) {

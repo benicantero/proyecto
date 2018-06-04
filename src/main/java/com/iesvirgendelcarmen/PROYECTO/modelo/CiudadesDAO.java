@@ -4,12 +4,14 @@ import java.util.List;
 
 public interface CiudadesDAO {
 	
-	public boolean insertarCiudad(CiudadesDTO ciudad);
-	public boolean insertaListaCiudades(List<CiudadesDTO> lista);
-	public boolean borrarCiudad();
-	public boolean actualizarCiudad();
-	public List<CiudadesDTO> listarCiudades(); 
 	public void crearTabla();
+	public boolean insertarCiudad(CiudadesDTO ciudad);
+	public boolean insertarListaCiudades(List<CiudadesDTO> lista);
+	public boolean borrarCiudad(CiudadesDTO ciudad);
+	public boolean borrarListaCiudades(List<CiudadesDTO> lista);
+	public boolean actualizarCiudad(CiudadesDTO ciudad);
+	public List<CiudadesDTO> listarCiudades(); 
+	
 
 	
 }

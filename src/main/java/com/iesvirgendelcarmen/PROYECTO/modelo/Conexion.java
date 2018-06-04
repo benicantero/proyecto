@@ -42,7 +42,7 @@ public class Conexion {
 				//establecer la conexion
 				conexion =DriverManager.getConnection(URL + BD,
 						config.toProperties());
-				System.out.println("Hay conexion");
+				System.out.println("Conexion establecida");
 			} catch ( ClassNotFoundException |
 					SQLException e) {
 				e.printStackTrace ();

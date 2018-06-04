@@ -12,17 +12,39 @@ public class CiudadesDAOImp implements CiudadesDAO{
 
 	Connection conexion = Conexion.getConexion();
 
-//	id INTEGER PRIMARY KEY 
-//	City TEXT
-//	Country TEXT
-//	Postal_Code TEXT
-//	Latitude NUMBER
-//	Longitude NUMBER
-	
+	//	id INTEGER PRIMARY KEY 
+	//	City TEXT
+	//	Country TEXT
+	//	Postal_Code TEXT
+	//	Latitude NUMBER
+	//	Longitude NUMBER
+
+
+	@Override
+	public void crearTabla() {
+
+		String sqlCrearBD = "CREATE TABLE IF NOT EXISTS ciudades (" + 
+				"        id INTEGER PRIMARY KEY," + 
+				"        City TEXT," +
+				"        Country TEXT, " +
+				"        Postal_Code TEXT," +
+				"        Latitude NUMBER," +
+				"        Longitude NUMBER" +
+				");";
+
+		try {
+			Statement statement = conexion.createStatement();
+			statement.executeUpdate(sqlCrearBD);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public boolean insertarCiudad(CiudadesDTO ciudad) {
-		String sql = "INSERT into ciudades (id, City, Country, Postal_Code, Latitude, Longitude ) VALUES (?,?,?,?,?,?);";
-		try (PreparedStatement preparedST = conexion.prepareStatement(sql);){
+		String sqlInsertarCiudad = "INSERT into ciudades (id, City, Country, Postal_Code, Latitude, Longitude ) VALUES (?,?,?,?,?,?);";
+		try (PreparedStatement preparedST = conexion.prepareStatement(sqlInsertarCiudad);){
 			preparedST.setInt(1, ciudad.getId());
 			preparedST.setString(2, ciudad.getCity());
 			preparedST.setString(3, ciudad.getCountry());
@@ -38,7 +60,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 	}
 
 	@Override
-	public boolean insertaListaCiudades(List<CiudadesDTO> listaCiudades) {
+	public boolean insertarListaCiudades(List<CiudadesDTO> listaCiudades) {
 		try {
 			conexion.setAutoCommit(false);
 			for (CiudadesDTO ciudades : listaCiudades) {
@@ -57,22 +79,56 @@ public class CiudadesDAOImp implements CiudadesDAO{
 	}
 
 	@Override
-	public boolean borrarCiudad() {
-		// TODO Auto-generated method stub
+	public boolean borrarCiudad(CiudadesDTO ciudad) {
+		String sqlBorrarCiudad = "DELETE from ciudades where id = ?;";
+		try (PreparedStatement preparedStatement = conexion.prepareStatement(sqlBorrarCiudad);){
+			preparedStatement.setInt(1, ciudad.getId());
+			return !preparedStatement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Adios");
 		return false;
 	}
 
 	@Override
-	public boolean actualizarCiudad() {
-		// TODO Auto-generated method stub
+	public boolean borrarListaCiudades(List<CiudadesDTO> lista) {
+		try {
+			conexion.setAutoCommit(false);
+			for (CiudadesDTO ciudadesDTO : lista) {
+				borrarCiudad(ciudadesDTO);
+			}
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean actualizarCiudad(CiudadesDTO ciudad) {
+		String sqlActualizarCiudad = "UPDATE ciudades SET City=?, Country=?, Postal_Code=?, Latitude=?, Longitude=? WHERE id=?;";
+		try (PreparedStatement preparedStatement = conexion.prepareStatement(sqlActualizarCiudad);){
+			preparedStatement.setString(1, ciudad.getCity());
+			preparedStatement.setString(2, ciudad.getCountry());
+			preparedStatement.setString(3, ciudad.getPostal_Code());
+			preparedStatement.setDouble(4, ciudad.getLatitude());
+			preparedStatement.setDouble(5, ciudad.getLongitude());
+			return preparedStatement.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 
 	@Override
 	public List<CiudadesDTO> listarCiudades() {
 		List<CiudadesDTO> lista = new ArrayList<>();
-		String sql = "SELECT * from ciudades;";
-		try(PreparedStatement preparedStatement = conexion.prepareStatement(sql);
+		String sqlListarCiudades = "SELECT * from ciudades;";
+		try(PreparedStatement preparedStatement = conexion.prepareStatement(sqlListarCiudades);
 				ResultSet result = preparedStatement.executeQuery();) {
 			while (result.next()) {
 				lista.add(new CiudadesDTO(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
@@ -83,26 +139,5 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			e.printStackTrace();
 		}
 		return lista;
-	}
-
-	@Override
-	public void crearTabla() {
-		
-		String sqlCrearBD = "CREATE TABLE IF NOT EXISTS ciudades (" + 
-				"        id INTEGER PRIMARY KEY," + 
-				"        City TEXT," +
-				"        Country TEXT, " +
-				"        Postal_Code TEXT," +
-				"        Latitude NUMBER," +
-				"        Longitude NUMBER" +
-				");";
-
-		try {
-			Statement statement = conexion.createStatement();
-			statement.executeUpdate(sqlCrearBD);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

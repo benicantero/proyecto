@@ -11,14 +11,8 @@ import java.util.List;
 public class CiudadesDAOImp implements CiudadesDAO{
 
 	Connection conexion = Conexion.getConexion();
-
-	//	id INTEGER PRIMARY KEY 
-	//	City TEXT
-	//	Country TEXT
-	//	Postal_Code TEXT
-	//	Latitude NUMBER
-	//	Longitude NUMBER
-
+	private Object[][] dataXml;
+	private String[] cabecerasColumnas = {"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE"};
 
 	@Override
 	public void crearTabla() {
@@ -139,5 +133,37 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			e.printStackTrace();
 		}
 		return lista;
+	}
+
+	@Override
+	public void llenarObjetoBidimensional(List<CiudadesDTO> lista) {
+		dataXml = new Object[lista.size()][6];
+		int contador = 0;
+
+		for (CiudadesDTO ciudad : listarCiudades()) {
+			dataXml[contador][0] = ciudad.getId();
+			dataXml[contador][1] = ciudad.getCity();
+			dataXml[contador][2] = ciudad.getCountry();
+			dataXml[contador][3] = ciudad.getPostal_Code();
+			dataXml[contador][4] = ciudad.getLatitude();
+			dataXml[contador][5] = ciudad.getLongitude();
+			contador++;
+		}
+	}
+	
+	public Object[][] getDataXml() {
+		return dataXml;
+	}
+
+	public void setDataXml(Object[][] dataXml) {
+		this.dataXml = dataXml;
+	}
+
+	public String[] getCabecerasColumnas() {
+		return cabecerasColumnas;
+	}
+
+	public void setCabecerasColumnas(String[] cabecerasColumnas) {
+		this.cabecerasColumnas = cabecerasColumnas;
 	}
 }

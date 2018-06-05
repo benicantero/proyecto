@@ -11,13 +11,14 @@ public class Main1 {
 		CiudadesDAOImp manipularCiudades = new CiudadesDAOImp();
 		List<CiudadesDTO> listaCiudades = cargarXML.getListaCiudades("Ficheros/ciudades.xml");
 		List<CiudadesDTO> lista2 = manipularCiudades.listarCiudades();
-
+//		compruebo si la lista está vacía
 		if(lista2.size()<=0) {
 			System.out.println("La BBDD existe pero no tiene datos... Insertamos datos");
 			manipularCiudades.crearTabla();
 			manipularCiudades.insertarListaCiudades(listaCiudades);
 			lista2=manipularCiudades.listarCiudades();  //llena la lista con un select
 		}else System.out.println("La BBDD existe y contiene datos");
+//		tamaño inicial de la lista		
 		System.out.println("Tamaño inicial: " + lista2.size());
 		CiudadesDTO ciudad1 = new CiudadesDTO(1001, "Ciudad" , "Pais", "0000AS", 230.52, 25.25 ); 
 		CiudadesDTO ciudad2 = new CiudadesDTO(1002, "Ciudad" , "Pais", "0000AS", 230.52, 25.25 ); 
@@ -51,6 +52,9 @@ public class Main1 {
 		manipularCiudades.insertarListaCiudades(listaInsertar);
 		lista2=manipularCiudades.listarCiudades();
 		System.out.println("Tamaño despues de la insercion de la lista: " + lista2.size());
-		
+		manipularCiudades.borrarListaCiudades(listaInsertar);
+		lista2=manipularCiudades.listarCiudades();
+		System.out.println("Tamaño despues del borrado de la lista: " + lista2.size());
+		System.out.println(manipularCiudades.actualizarCiudad(ciudad1));
 	}
 }

@@ -7,14 +7,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableModel;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import java.awt.Color;
 
 public class TablaMenu {
 
@@ -50,12 +49,14 @@ public class TablaMenu {
 	 */
 	private void initialize() {
 		frame = new JFrame("Proyecto Fin de Curso Beni");
-		frame.setBounds(100, 100, 450, 433);
+		frame.getContentPane().setBackground(Color.WHITE);
+		frame.setBounds(100, 100, 750, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
 		menuBar = new JMenuBar();
+		menuBar.setBackground(new Color(128, 128, 128));
 		frame.setJMenuBar(menuBar);
 		
 		mnArchivo = new JMenu("Archivo");
@@ -76,6 +77,7 @@ public class TablaMenu {
 		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		
 		splitPane = new JSplitPane();
+		splitPane.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(splitPane);
 		
 		panel = new JPanel();
@@ -83,14 +85,17 @@ public class TablaMenu {
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		btnActualizar = new JButton("Actualizar");
+		btnActualizar.setBackground(Color.LIGHT_GRAY);
 		panel.add(btnActualizar);
 		btnActualizar.setEnabled(false);
 		
 		btnBorrar = new JButton("Borrar");
+		btnBorrar.setBackground(Color.LIGHT_GRAY);
 		panel.add(btnBorrar);
 		btnBorrar.setEnabled(false);
 		
 		btnInsertar = new JButton("Insertar");
+		btnInsertar.setBackground(Color.LIGHT_GRAY);
 		panel.add(btnInsertar);
 		btnBorrar.setEnabled(false);
 		btnInsertar.setEnabled(false);
@@ -110,10 +115,12 @@ public class TablaMenu {
 		panel_tabla.add(panel_botones, BorderLayout.SOUTH);
 		
 		btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.setBackground(Color.LIGHT_GRAY);
 		panel_botones.add(btnSiguiente);
 		btnSiguiente.setEnabled(false);
 		
 		btnAnterior = new JButton("Anterior");
+		btnAnterior.setBackground(Color.LIGHT_GRAY);
 		panel_botones.add(btnAnterior);
 		btnAnterior.setEnabled(false);
 	}

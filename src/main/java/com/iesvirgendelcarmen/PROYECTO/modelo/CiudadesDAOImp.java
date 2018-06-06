@@ -47,7 +47,6 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			preparedST.setDouble(6, ciudad.getLongitude());
 			return preparedST.execute();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -81,7 +80,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Adios");
+//		System.out.println("Adios");
 		return false;
 	}
 
@@ -94,7 +93,6 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			}
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -111,7 +109,6 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			preparedStatement.setDouble(5, ciudad.getLongitude());
 			return preparedStatement.execute();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -129,7 +126,6 @@ public class CiudadesDAOImp implements CiudadesDAO{
 						result.getDouble(5), result.getDouble(6)));
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return lista;

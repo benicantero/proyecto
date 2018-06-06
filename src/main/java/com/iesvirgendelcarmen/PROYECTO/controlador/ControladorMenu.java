@@ -1,16 +1,15 @@
 package com.iesvirgendelcarmen.PROYECTO.controlador;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import com.iesvirgendelcarmen.PROYECTO.modelo.CargarXML;
@@ -51,13 +50,18 @@ public class ControladorMenu implements ActionListener{
 
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e){
+		//		if(e.getSource().getClass() == KeyStroke.getKeyStrok) )
+
+
 		if(e.getSource().getClass() == JButton.class){
 			JButton boton =(JButton)e.getSource();
 			String botonString = boton.getText();
 			switch (botonString) {
 			case "Actualizar":
-
+				//				vista.inse
+				//				CiudadesDTO ciudad = vista.getTabla().getSelectedRow();
+				//				utilizarDaoImp.actualizarCiudad(ciudad);
 				break;
 			case "Insertar":
 
@@ -65,8 +69,7 @@ public class ControladorMenu implements ActionListener{
 			case "Borrar":
 
 				break;
-			case "Anterior"
-			+ "":
+			case "Anterior":
 
 				break;
 			case "Siguiente":
@@ -97,7 +100,7 @@ public class ControladorMenu implements ActionListener{
 		}
 	}
 
-	private void introducirFichero() {
+	private void introducirFichero(){
 		JFileChooser jFileChooser = new JFileChooser("./Ficheros");
 		int resultado = jFileChooser.showOpenDialog(vista.getFrame());
 		if(resultado == JFileChooser.APPROVE_OPTION)
@@ -115,27 +118,64 @@ public class ControladorMenu implements ActionListener{
 		vista.getMntmCargarBd().setEnabled(true);
 		utilizarDaoImp.insertarListaCiudades(listaCiudades);
 	}
-	
+
 	private void llenarTabla() {
-		
+
 		List<CiudadesDTO> listaCiudadesTabla = utilizarDaoImp.listarCiudades();
-//		System.out.println(listaCiudadesTabla);
 		utilizarDaoImp.llenarObjetoBidimensional(listaCiudadesTabla);
-		DefaultTableModel dftModel = new DefaultTableModel(utilizarDaoImp.getDataXml(), utilizarDaoImp.getCabecerasColumnas()) {
+	/*	DefaultTableModel dftModel = new DefaultTableModel(utilizarDaoImp.getDataXml(), utilizarDaoImp.getCabecerasColumnas()) {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column !=0;
 			}
-		};
-//		dimension = vista.getTabla().getPreferredSize();
-		vista.getTabla().setModel(dftModel);
-//		System.out.println(dimension.width+ "    "+ vista.getTabla().getRowHeight()*filas);
-//		scrollPane.setPreferredSize(new Dimension(dimension.width, vista.getTabla().getRowHeight()*filas));
-//		vista.getPanel_tabla().add(scrollPane, BorderLayout.CENTER);
-//		scrollPane.setViewportView(vista.getTabla());
-//		System.out.println(utilizarDaoImp.getDataXml()+" "+utilizarDaoImp.getCabecerasColumnas());
+		};*/
+		MyTableModel modelo = new MyTableModel();
+		vista.getTabla().setModel(modelo);
 		vista.getScrollPaneTabla().setViewportView(vista.getTabla());
 	}
-	
+
+	class MyTableModel extends AbstractTableModel {
+
+		private String[] cabecerasColumnas = utilizarDaoImp.getCabecerasColumnas();
+		//{"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE"};
+		private Object[][] dataXml = utilizarDaoImp.getDataXml();
+
+
+		@Override
+		public int getColumnCount() {
+			return cabecerasColumnas.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			return dataXml.length;
+		}
+
+		@Override
+		public Object getValueAt(int row, int col) {
+			return dataXml[row][col];
+		}
+		@Override
+
+		public String getColumnName (int col) {
+			return cabecerasColumnas[col];
+		}
+	/*	@Override
+
+		public Class getClumnClass (int c) {
+			return getValueAt(0, c).getClass();
+		}*/
+		@Override
+		public boolean isCellEditable(int row, int col) {
+			return col != 0;
+		}
+
+		@Override
+
+		public void setValueAt(Object value, int row, int col) {
+			dataXml[row][col] = value;
+			fireTableCellUpdated(row, col);
+		}
+	}
 }

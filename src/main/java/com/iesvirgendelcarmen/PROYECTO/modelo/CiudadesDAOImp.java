@@ -12,7 +12,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 
 	Connection conexion = Conexion.getConexion();
 	private Object[][] dataXml;
-	private String[] cabecerasColumnas = {"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE"};
+	private String[] cabecerasColumnas = {"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE","UPDATE"};
 
 	@Override
 	public void crearTabla() {
@@ -55,7 +55,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 	@Override
 	public boolean insertarListaCiudades(List<CiudadesDTO> listaCiudades) {
 		try {
-			conexion.setAutoCommit(false);
+			conexion.setAutoCommit(true);
 			for (CiudadesDTO ciudades : listaCiudades) {
 				insertarCiudad(ciudades);
 			}
@@ -80,14 +80,13 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		System.out.println("Adios");
 		return false;
 	}
 
 	@Override
 	public boolean borrarListaCiudades(List<CiudadesDTO> lista) {
 		try {
-			conexion.setAutoCommit(false);
+			conexion.setAutoCommit(true);
 			for (CiudadesDTO ciudadesDTO : lista) {
 				borrarCiudad(ciudadesDTO);
 			}
@@ -107,6 +106,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			preparedStatement.setString(3, ciudad.getPostal_Code());
 			preparedStatement.setDouble(4, ciudad.getLatitude());
 			preparedStatement.setDouble(5, ciudad.getLongitude());
+			preparedStatement.setInt(6, ciudad.getId());			
 			return preparedStatement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -115,6 +115,21 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		return false;
 	}
 
+	@Override
+	public boolean actualizarListaCiudades(List<CiudadesDTO> lista) {
+		try {
+			conexion.setAutoCommit(true);
+			for (CiudadesDTO ciudadesDTO : lista) {
+				actualizarCiudad(ciudadesDTO);
+			}
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
 	@Override
 	public List<CiudadesDTO> listarCiudades() {
 		List<CiudadesDTO> lista = new ArrayList<>();
@@ -133,7 +148,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 
 	@Override
 	public void llenarObjetoBidimensional(List<CiudadesDTO> lista) {
-		dataXml = new Object[lista.size()][6];
+		dataXml = new Object[lista.size()][7];
 		int contador = 0;
 
 		for (CiudadesDTO ciudad : listarCiudades()) {
@@ -143,9 +158,11 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			dataXml[contador][3] = ciudad.getPostal_Code();
 			dataXml[contador][4] = ciudad.getLatitude();
 			dataXml[contador][5] = ciudad.getLongitude();
+			dataXml[contador][6] = Boolean.FALSE;
 			contador++;
 		}
 	}
+	
 	
 	public Object[][] getDataXml() {
 		return dataXml;
@@ -162,4 +179,5 @@ public class CiudadesDAOImp implements CiudadesDAO{
 	public void setCabecerasColumnas(String[] cabecerasColumnas) {
 		this.cabecerasColumnas = cabecerasColumnas;
 	}
-}
+
+	}

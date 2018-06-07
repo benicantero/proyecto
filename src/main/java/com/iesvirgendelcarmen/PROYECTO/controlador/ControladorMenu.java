@@ -3,15 +3,17 @@ package com.iesvirgendelcarmen.PROYECTO.controlador;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.*;
 import com.iesvirgendelcarmen.PROYECTO.modelo.CargarXML;
 import com.iesvirgendelcarmen.PROYECTO.modelo.CiudadesDAOImp;
 import com.iesvirgendelcarmen.PROYECTO.modelo.CiudadesDTO;
@@ -22,8 +24,10 @@ public class ControladorMenu implements ActionListener{
 	private TablaMenu vista; 
 	private String path;
 	private List<CiudadesDTO> listaCiudades;
+	private static List<CiudadesDTO> listaCiudadesEstaticas;
 	private CargarXML cargarXml = new CargarXML();
 	CiudadesDAOImp utilizarDaoImp = new CiudadesDAOImp();
+	Boolean check;
 	Dimension dimension;
 	JScrollPane scrollPane;
 	int filas = 20;
@@ -59,9 +63,8 @@ public class ControladorMenu implements ActionListener{
 			String botonString = boton.getText();
 			switch (botonString) {
 			case "Actualizar":
-				//				vista.inse
-				//				CiudadesDTO ciudad = vista.getTabla().getSelectedRow();
-				//				utilizarDaoImp.actualizarCiudad(ciudad);
+				actualizarDatosYTabla();
+
 				break;
 			case "Insertar":
 
@@ -100,6 +103,28 @@ public class ControladorMenu implements ActionListener{
 		}
 	}
 
+	private void actualizarDatosYTabla () {
+		List<CiudadesDTO> listaSeleccionados = new ArrayList<>();
+		int id = 0;
+		String city, country, postal_code;
+		double latitude, longitude;
+		for (int i = 0; i < listaCiudades.size(); i++) {
+			if((boolean)vista.getTabla().getValueAt(i, 6)) {
+				id=(int) vista.getTabla().getValueAt(i, 0);
+				city = (String) vista.getTabla().getValueAt(i, 1);
+				country = (String) vista.getTabla().getValueAt(i, 2);
+				postal_code = (String) vista.getTabla().getValueAt(i, 3);
+				latitude = (Double) vista.getTabla().getValueAt(i, 4);
+				longitude = (Double) vista.getTabla().getValueAt(i, 5);
+			CiudadesDTO ciudadAñadida = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
+			utilizarDaoImp.actualizarCiudad(ciudadAñadida);
+			}//controlar no item marcado
+		}
+//		if(listaSeleccionados.size()<=0) JOptionPane.showMessageDialog(parentComponent, message);
+		utilizarDaoImp.actualizarListaCiudades(listaSeleccionados);
+		llenarTabla();
+	}
+	
 	private void introducirFichero(){
 		JFileChooser jFileChooser = new JFileChooser("./Ficheros");
 		int resultado = jFileChooser.showOpenDialog(vista.getFrame());
@@ -108,7 +133,10 @@ public class ControladorMenu implements ActionListener{
 		else if(resultado == JFileChooser.CANCEL_OPTION) {
 			path = ".";
 		}
-		listaCiudades = cargarXml.getListaCiudades(path);
+		listaCiudadesEstaticas = cargarXml.getListaCiudades(path);
+		listaCiudades = utilizarDaoImp.listarCiudades();
+		if(listaCiudades.size()<=0)
+			utilizarDaoImp.insertarListaCiudades(listaCiudadesEstaticas);
 		vista.getBtnActualizar().setEnabled(true);
 		vista.getBtnAnterior().setEnabled(true);
 		vista.getBtnBorrar().setEnabled(true);
@@ -116,20 +144,13 @@ public class ControladorMenu implements ActionListener{
 		vista.getBtnSiguiente().setEnabled(true);
 		vista.getMnArchivo().setEnabled(true);
 		vista.getMntmCargarBd().setEnabled(true);
-		utilizarDaoImp.insertarListaCiudades(listaCiudades);
+		
 	}
 
 	private void llenarTabla() {
 
 		List<CiudadesDTO> listaCiudadesTabla = utilizarDaoImp.listarCiudades();
 		utilizarDaoImp.llenarObjetoBidimensional(listaCiudadesTabla);
-	/*	DefaultTableModel dftModel = new DefaultTableModel(utilizarDaoImp.getDataXml(), utilizarDaoImp.getCabecerasColumnas()) {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column !=0;
-			}
-		};*/
 		MyTableModel modelo = new MyTableModel();
 		vista.getTabla().setModel(modelo);
 		vista.getScrollPaneTabla().setViewportView(vista.getTabla());
@@ -138,6 +159,7 @@ public class ControladorMenu implements ActionListener{
 	class MyTableModel extends AbstractTableModel {
 
 		private String[] cabecerasColumnas = utilizarDaoImp.getCabecerasColumnas();
+		
 		//{"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE"};
 		private Object[][] dataXml = utilizarDaoImp.getDataXml();
 
@@ -161,11 +183,7 @@ public class ControladorMenu implements ActionListener{
 		public String getColumnName (int col) {
 			return cabecerasColumnas[col];
 		}
-	/*	@Override
 
-		public Class getClumnClass (int c) {
-			return getValueAt(0, c).getClass();
-		}*/
 		@Override
 		public boolean isCellEditable(int row, int col) {
 			return col != 0;
@@ -176,6 +194,14 @@ public class ControladorMenu implements ActionListener{
 		public void setValueAt(Object value, int row, int col) {
 			dataXml[row][col] = value;
 			fireTableCellUpdated(row, col);
+		}
+		
+		@Override
+		public Class getColumnClass (int col) {
+			if(col==6) {
+				return Boolean.class;
+			}
+			return super.getColumnClass(col);
 		}
 	}
 }

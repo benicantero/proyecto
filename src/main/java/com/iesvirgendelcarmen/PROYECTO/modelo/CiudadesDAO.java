@@ -10,6 +10,7 @@ public interface CiudadesDAO {
 	public boolean borrarCiudad(CiudadesDTO ciudad);
 	public boolean borrarListaCiudades(List<CiudadesDTO> lista);
 	public boolean actualizarCiudad(CiudadesDTO ciudad);
+	public boolean actualizarListaCiudades(List<CiudadesDTO> lista);
 	public List<CiudadesDTO> listarCiudades(); 
 	public void llenarObjetoBidimensional(List<CiudadesDTO> lista);
 

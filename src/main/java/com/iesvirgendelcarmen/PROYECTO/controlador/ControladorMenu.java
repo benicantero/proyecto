@@ -40,15 +40,14 @@ public class ControladorMenu implements ActionListener{
 	private void registrarBotones() {
 		vista.getBtnActualizar().addActionListener(this);
 		vista.getBtnBorrar().addActionListener(this);
-		vista.getBtnAnterior().addActionListener(this);
-		vista.getBtnSiguiente().addActionListener(this);
 		vista.getBtnInsertar().addActionListener(this);
+		vista.getBtnBuscar().addActionListener(this);
+
 
 		vista.getMntmAcercaDe().addActionListener(this);
 		vista.getMnArchivo().addActionListener(this);
 		vista.getMntmCargarBd().addActionListener(this);
 		vista.getMntmSalir().addActionListener(this);
-
 
 	}
 
@@ -64,18 +63,15 @@ public class ControladorMenu implements ActionListener{
 			switch (botonString) {
 			case "Actualizar":
 				actualizarDatosYTabla();
-
-				break;
-			case "Insertar":
-
 				break;
 			case "Borrar":
-
+				borrarDatosTabla();
 				break;
-			case "Anterior":
-
+			case "INSERTAR":
+				System.out.println("hola");
+				insertarCiudadEnTabla();
 				break;
-			case "Siguiente":
+			case "Buscar":
 
 				break;
 			default:
@@ -116,14 +112,56 @@ public class ControladorMenu implements ActionListener{
 				postal_code = (String) vista.getTabla().getValueAt(i, 3);
 				latitude = (Double) vista.getTabla().getValueAt(i, 4);
 				longitude = (Double) vista.getTabla().getValueAt(i, 5);
-			CiudadesDTO ciudadAñadida = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
-			utilizarDaoImp.actualizarCiudad(ciudadAñadida);
+				CiudadesDTO ciudadAñadida = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
+				utilizarDaoImp.actualizarCiudad(ciudadAñadida);
 			}//controlar no item marcado
 		}
-//		if(listaSeleccionados.size()<=0) JOptionPane.showMessageDialog(parentComponent, message);
+		//		if(listaSeleccionados.size()<=0) JOptionPane.showMessageDialog(parentComponent, message);
 		utilizarDaoImp.actualizarListaCiudades(listaSeleccionados);
 		llenarTabla();
 	}
+
+	private void borrarDatosTabla () {
+		List<CiudadesDTO> listaSeleccionados = new ArrayList<>();
+		int id = 0;
+		String city, country, postal_code;
+		double latitude, longitude;
+		listaCiudades= utilizarDaoImp.listarCiudades();
+		for (int i = 0; i < listaCiudades.size(); i++) {
+			if((boolean)vista.getTabla().getValueAt(i, 6)) {
+				id=(int) vista.getTabla().getValueAt(i, 0);
+				city = (String) vista.getTabla().getValueAt(i, 1);
+				country = (String) vista.getTabla().getValueAt(i, 2);
+				postal_code = (String) vista.getTabla().getValueAt(i, 3);
+				latitude = (Double) vista.getTabla().getValueAt(i, 4);
+				longitude = (Double) vista.getTabla().getValueAt(i, 5);
+				CiudadesDTO ciudadAñadida = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
+				listaSeleccionados.add(ciudadAñadida);
+			}//controlar no item marcado
+		}
+		//		if(listaSeleccionados.size()<=0) JOptionPane.showMessageDialog(parentComponent, message);
+		utilizarDaoImp.borrarListaCiudades(listaSeleccionados);
+		llenarTabla();
+	}
+
+
+	private void insertarCiudadEnTabla () {
+		int id = 0;
+		String city, country, postal_code;
+		double latitude, longitude;
+		id = Integer.parseInt(vista.getTextField_id().getText());
+		city = vista.getTextField_City().getText();
+		country = vista.getTextField_Country().getText();
+		postal_code = vista.getTextField_Postal_Code().getText();
+		latitude = Double.parseDouble(vista.getTextField_latitude().getText());
+		longitude = Double.parseDouble(vista.getTextField_longitude().getText());
+		CiudadesDTO ciudadInsertada = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
+		System.out.println("pepe");
+		//	controlar si el id existe
+		utilizarDaoImp.insertarCiudad(ciudadInsertada);
+		llenarTabla();
+	}
+	
 	
 	private void introducirFichero(){
 		JFileChooser jFileChooser = new JFileChooser("./Ficheros");
@@ -138,13 +176,11 @@ public class ControladorMenu implements ActionListener{
 		if(listaCiudades.size()<=0)
 			utilizarDaoImp.insertarListaCiudades(listaCiudadesEstaticas);
 		vista.getBtnActualizar().setEnabled(true);
-		vista.getBtnAnterior().setEnabled(true);
 		vista.getBtnBorrar().setEnabled(true);
 		vista.getBtnInsertar().setEnabled(true);
-		vista.getBtnSiguiente().setEnabled(true);
 		vista.getMnArchivo().setEnabled(true);
 		vista.getMntmCargarBd().setEnabled(true);
-		
+
 	}
 
 	private void llenarTabla() {
@@ -159,7 +195,7 @@ public class ControladorMenu implements ActionListener{
 	class MyTableModel extends AbstractTableModel {
 
 		private String[] cabecerasColumnas = utilizarDaoImp.getCabecerasColumnas();
-		
+
 		//{"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE"};
 		private Object[][] dataXml = utilizarDaoImp.getDataXml();
 
@@ -195,7 +231,7 @@ public class ControladorMenu implements ActionListener{
 			dataXml[row][col] = value;
 			fireTableCellUpdated(row, col);
 		}
-		
+
 		@Override
 		public Class getColumnClass (int col) {
 			if(col==6) {

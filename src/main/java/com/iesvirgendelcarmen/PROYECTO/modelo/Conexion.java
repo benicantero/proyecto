@@ -42,7 +42,7 @@ public class Conexion {
 				//establecer la conexion
 				conexion =DriverManager.getConnection(URL + BD,
 						config.toProperties());
-				System.out.println("Conexion establecida");
+//				System.out.println("Conexion establecida");
 			} catch ( ClassNotFoundException |
 					SQLException e) {
 				e.printStackTrace ();
@@ -64,7 +64,7 @@ public class Conexion {
 			Connection con = Conexion . getConexion ();
 			if ( conexion != null ) {
 				try {
-					System.out.println("Conexion cerrada");
+//					System.out.println("Conexion cerrada");
 					con.close ();
 				} catch ( SQLException e) {
 					e.printStackTrace ();

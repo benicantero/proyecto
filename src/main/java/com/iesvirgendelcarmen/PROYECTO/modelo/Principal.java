@@ -1,7 +1,6 @@
 package com.iesvirgendelcarmen.PROYECTO.modelo;
 
 import java.awt.EventQueue;
-
 import com.iesvirgendelcarmen.PROYECTO.controlador.ControladorMenu;
 import com.iesvirgendelcarmen.PROYECTO.vista.TablaMenu;
 
@@ -16,5 +15,4 @@ public class Principal {
 			}
 		});
 	}
-
 }

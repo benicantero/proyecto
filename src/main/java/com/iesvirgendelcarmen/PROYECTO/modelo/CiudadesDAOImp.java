@@ -128,8 +128,8 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		}
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public List<CiudadesDTO> listarCiudades() {
 		List<CiudadesDTO> lista = new ArrayList<>();
@@ -162,7 +162,23 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			contador++;
 		}
 	}
-	
+
+
+	@Override
+	public CiudadesDTO buscarCiudad (String ciudad) {
+		CiudadesDTO ciudadBuscada = null;
+		String sqlBuscarCiudades = "SELECT * from ciudades WHERE CITY = ?;";
+		try (PreparedStatement preparedStatement = conexion.prepareStatement(sqlBuscarCiudades);){
+			preparedStatement.setString(1, ciudad);
+			ResultSet result = preparedStatement.executeQuery();
+			ciudadBuscada = new CiudadesDTO(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
+					result.getDouble(5), result.getDouble(6));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ciudadBuscada;
+	}
+
 	
 	public Object[][] getDataXml() {
 		return dataXml;
@@ -180,4 +196,4 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		this.cabecerasColumnas = cabecerasColumnas;
 	}
 
-	}
+}

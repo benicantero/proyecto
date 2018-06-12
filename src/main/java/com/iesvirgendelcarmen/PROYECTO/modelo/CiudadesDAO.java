@@ -13,6 +13,7 @@ public interface CiudadesDAO {
 	public boolean actualizarListaCiudades(List<CiudadesDTO> lista);
 	public List<CiudadesDTO> listarCiudades(); 
 	public void llenarObjetoBidimensional(List<CiudadesDTO> lista);
+	public CiudadesDTO buscarCiudad(String ciudad);
 
 	
 }

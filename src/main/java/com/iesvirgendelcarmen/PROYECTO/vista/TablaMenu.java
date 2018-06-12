@@ -14,8 +14,6 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.Color;
-import java.awt.FlowLayout;
-
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -57,7 +55,7 @@ public class TablaMenu {
 	private JLabel label;
 	private JTextField textField_id;
 	private JButton btnInsertar;
-
+	private JTextField textFieldbuscador = new JTextField();
 
 	/**
 	 * Create the application.
@@ -76,141 +74,145 @@ public class TablaMenu {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
+
 		menuBar = new JMenuBar();
 		menuBar.setBackground(new Color(128, 128, 128));
 		frame.setJMenuBar(menuBar);
-		
+
 		mnArchivo = new JMenu("Archivo");
 		mnArchivo.setHorizontalAlignment(SwingConstants.CENTER);
 		menuBar.add(mnArchivo);
-		
+
 		mntmCargarBd = new JMenuItem("Cargar BD");
 		mnArchivo.add(mntmCargarBd);
-		
+
 		mntmSalir = new JMenuItem("Salir");
 		mnArchivo.add(mntmSalir);
-		
+
 		mnAcercaDe = new JMenu("Acerca de");
 		menuBar.add(mnAcercaDe);
-		
+
 		mntmAcercaDe = new JMenuItem("Acerca");
 		mnAcercaDe.add(mntmAcercaDe);
 		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		splitPane = new JSplitPane();
 		splitPane.setBackground(Color.DARK_GRAY);
 		frame.getContentPane().add(splitPane);
-		
+
 		panel = new JPanel();
 		splitPane.setLeftComponent(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		btnActualizar = new JButton("Actualizar");
 		btnActualizar.setBackground(Color.LIGHT_GRAY);
 		panel.add(btnActualizar);
 		btnActualizar.setEnabled(false);
-		
+
 		btnBorrar = new JButton("Borrar");
 		btnBorrar.setBackground(Color.LIGHT_GRAY);
 		panel.add(btnBorrar);
 		btnBorrar.setEnabled(false);
-		
+
+
 		btnBuscar = new JButton("Buscar");
 		btnBuscar.setBackground(Color.LIGHT_GRAY);
 		panel.add(btnBuscar);
-		btnBorrar.setEnabled(false);
 		btnBuscar.setEnabled(false);
-		
+
 		panel_tabla = new JPanel();
 		splitPane.setRightComponent(panel_tabla);
-		
+
 		panel_tabla.setLayout(new BorderLayout(0, 0));
-		
+
 		scrollPaneTabla = new JScrollPane();
 		panel_tabla.add(scrollPaneTabla);
-		
+
 		tabla = new JTable();
 		scrollPaneTabla.add(tabla);
-		
+
 		panel_insertar = new JPanel();
 		panel_tabla.add(panel_insertar, BorderLayout.SOUTH);
 		panel_insertar.setLayout(new GridLayout(1, 6, 0, 0));
-		
+
 		panel_id = new JPanel();
 		panel_id.setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		panel_insertar.add(panel_id);
 		panel_id.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		label = new JLabel("ID");
 		panel_id.add(label);
-		
+
 		textField_id = new JTextField();
 		textField_id.setColumns(10);
 		panel_id.add(textField_id);
-		
+
 		panel_city = new JPanel();
 		panel_city.setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		panel_insertar.add(panel_city);
 		panel_city.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		lblCity = new JLabel("CITY");
 		panel_city.add(lblCity);
-		
+
 		textField_City = new JTextField();
 		panel_city.add(textField_City);
 		textField_City.setColumns(10);
-		
+
 		panel_country = new JPanel();
 		panel_country.setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		panel_insertar.add(panel_country);
 		panel_country.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		lblCountry = new JLabel("COUNTRY");
 		panel_country.add(lblCountry);
-		
+
 		textField_Country = new JTextField();
 		panel_country.add(textField_Country);
 		textField_Country.setColumns(10);
-		
+
 		panel_postal_code = new JPanel();
 		panel_postal_code.setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		panel_insertar.add(panel_postal_code);
 		panel_postal_code.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		lblPostalCode = new JLabel("POSTAL CODE");
 		panel_postal_code.add(lblPostalCode);
-		
+
 		textField_Postal_Code = new JTextField();
 		panel_postal_code.add(textField_Postal_Code);
 		textField_Postal_Code.setColumns(10);
-		
+
 		panel_latitude = new JPanel();
 		panel_latitude.setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		panel_insertar.add(panel_latitude);
 		panel_latitude.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		lblLatitude = new JLabel("LATITUDE");
 		panel_latitude.add(lblLatitude);
 		
+
 		textField_latitude = new JTextField();
 		panel_latitude.add(textField_latitude);
 		textField_latitude.setColumns(10);
-		
+
 		panel_longitude = new JPanel();
 		panel_longitude.setBorder(new LineBorder(new Color(128, 128, 128), 2, true));
 		panel_insertar.add(panel_longitude);
 		panel_longitude.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		lblLongitude = new JLabel("LONGITUDE");
 		panel_longitude.add(lblLongitude);
-		
+
 		textField_longitude = new JTextField();
 		panel_longitude.add(textField_longitude);
 		textField_longitude.setColumns(10);
-		
+
 		btnInsertar = new JButton("INSERTAR");
 		panel_insertar.add(btnInsertar);
+		btnInsertar.setEnabled(false);
+		
+		
 	}
 
 	public JButton getBtnBuscar() {
@@ -335,11 +337,11 @@ public class TablaMenu {
 	}
 
 	public JButton getBtnInsertar() {
-		return btnBuscar;
+		return btnInsertar;
 	}
 
 	public void setBtnInsertar(JButton btnInsertar) {
-		this.btnBuscar = btnInsertar;
+		this.btnInsertar = btnInsertar;
 	}
 
 	public JButton getBtnBorrar() {
@@ -501,6 +503,16 @@ public class TablaMenu {
 	public void setTextField(JTextField textField) {
 		this.textField_id = textField;
 	}
+
+	public void setTextField_id(JTextField textField_id) {
+		this.textField_id = textField_id;
+	}
 	
-	
+	public JTextField getTextFieldbuscador() {
+		return textFieldbuscador;
+	}
+
+	public void setTextFieldbuscador(JTextField textFieldbuscador) {
+		this.textFieldbuscador = textFieldbuscador;
+	}
 }

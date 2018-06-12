@@ -3,17 +3,15 @@ package com.iesvirgendelcarmen.PROYECTO.controlador;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.*;
 import com.iesvirgendelcarmen.PROYECTO.modelo.CargarXML;
 import com.iesvirgendelcarmen.PROYECTO.modelo.CiudadesDAOImp;
 import com.iesvirgendelcarmen.PROYECTO.modelo.CiudadesDTO;
@@ -43,7 +41,6 @@ public class ControladorMenu implements ActionListener{
 		vista.getBtnInsertar().addActionListener(this);
 		vista.getBtnBuscar().addActionListener(this);
 
-
 		vista.getMntmAcercaDe().addActionListener(this);
 		vista.getMnArchivo().addActionListener(this);
 		vista.getMntmCargarBd().addActionListener(this);
@@ -68,11 +65,11 @@ public class ControladorMenu implements ActionListener{
 				borrarDatosTabla();
 				break;
 			case "INSERTAR":
-				System.out.println("hola");
-				insertarCiudadEnTabla();
+				insertarCiudad();
+				vista.getBtnInsertar().setEnabled(true);
 				break;
 			case "Buscar":
-
+				buscarCiudad();
 				break;
 			default:
 				break;
@@ -91,12 +88,31 @@ public class ControladorMenu implements ActionListener{
 				System.exit(0);
 				break;
 			case "Acerca" :
-				JOptionPane.showMessageDialog( null, "Benigno Cantero - Junio 2018", "Info", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog( null, "Benigno Cantero - Junio 2018", "App Info", JOptionPane.INFORMATION_MESSAGE);
 				break;
 			default:
 				break;
 			}
 		}
+	}
+
+	private void buscarCiudad() {
+		Object[] textField = {
+				"Ciudad", vista.getTextFieldbuscador()};
+		int result = JOptionPane.showConfirmDialog(null, textField, "BÚSQUEDA CIUDADES", JOptionPane.OK_CANCEL_OPTION);
+		String busquedaCiudad = vista.getTextFieldbuscador().getText();
+		if(result==JOptionPane.OK_OPTION) {
+			CiudadesDTO ciudadDeTabla = utilizarDaoImp.buscarCiudad(busquedaCiudad);
+			if (ciudadDeTabla!=null) {
+				JOptionPane.showMessageDialog(null, "Ciudad: "+ciudadDeTabla.getCity()+
+						"\nID: "         + ciudadDeTabla.getId()+
+						"\nCountry: "    +ciudadDeTabla.getCountry()+
+						"\nPostal Code: "+ciudadDeTabla.getPostal_Code()+
+						"\nLatiude: "    + ciudadDeTabla.getLatitude() + 
+						"\nLongitude: "  +ciudadDeTabla.getLongitude());
+			} else
+				JOptionPane.showMessageDialog(null,"No se han encontrado datos");
+		}		
 	}
 
 	private void actualizarDatosYTabla () {
@@ -106,17 +122,17 @@ public class ControladorMenu implements ActionListener{
 		double latitude, longitude;
 		for (int i = 0; i < listaCiudades.size(); i++) {
 			if((boolean)vista.getTabla().getValueAt(i, 6)) {
-				id=(int) vista.getTabla().getValueAt(i, 0);
+				id= (int) vista.getTabla().getValueAt(i, 0);
 				city = (String) vista.getTabla().getValueAt(i, 1);
 				country = (String) vista.getTabla().getValueAt(i, 2);
 				postal_code = (String) vista.getTabla().getValueAt(i, 3);
-				latitude = (Double) vista.getTabla().getValueAt(i, 4);
-				longitude = (Double) vista.getTabla().getValueAt(i, 5);
+				latitude = Double.parseDouble(vista.getTabla().getValueAt(i, 4).toString());
+				longitude =  Double.parseDouble(vista.getTabla().getValueAt(i, 5).toString());
 				CiudadesDTO ciudadAñadida = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
 				utilizarDaoImp.actualizarCiudad(ciudadAñadida);
-			}//controlar no item marcado
+				JOptionPane.showMessageDialog( null, "Actualización realizada", "ACTUALIZACIÓN", JOptionPane.INFORMATION_MESSAGE);
+			}	
 		}
-		//		if(listaSeleccionados.size()<=0) JOptionPane.showMessageDialog(parentComponent, message);
 		utilizarDaoImp.actualizarListaCiudades(listaSeleccionados);
 		llenarTabla();
 	}
@@ -137,15 +153,16 @@ public class ControladorMenu implements ActionListener{
 				longitude = (Double) vista.getTabla().getValueAt(i, 5);
 				CiudadesDTO ciudadAñadida = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
 				listaSeleccionados.add(ciudadAñadida);
-			}//controlar no item marcado
+				JOptionPane.showMessageDialog( null, "Ciudad borrada correctamente", "BORRADO", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
-		//		if(listaSeleccionados.size()<=0) JOptionPane.showMessageDialog(parentComponent, message);
 		utilizarDaoImp.borrarListaCiudades(listaSeleccionados);
 		llenarTabla();
 	}
 
 
-	private void insertarCiudadEnTabla () {
+	private void insertarCiudad () {
+		boolean existe = false;
 		int id = 0;
 		String city, country, postal_code;
 		double latitude, longitude;
@@ -156,13 +173,19 @@ public class ControladorMenu implements ActionListener{
 		latitude = Double.parseDouble(vista.getTextField_latitude().getText());
 		longitude = Double.parseDouble(vista.getTextField_longitude().getText());
 		CiudadesDTO ciudadInsertada = new CiudadesDTO(id, city, country, postal_code, latitude, longitude);
-		System.out.println("pepe");
-		//	controlar si el id existe
-		utilizarDaoImp.insertarCiudad(ciudadInsertada);
-		llenarTabla();
+		for (int i = 0; i < listaCiudades.size(); i++) {
+			if (id == listaCiudades.get(i).getId()) existe = true;
+		}
+		if (existe) {
+			JOptionPane.showMessageDialog( null, "No se puede insertar ciudad con un ID existente", "ID EXISTENTE", JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			utilizarDaoImp.insertarCiudad(ciudadInsertada);
+			JOptionPane.showMessageDialog( null, "Ciudad insertada correctamente", "INSERCIÓN CORRECTA", JOptionPane.INFORMATION_MESSAGE);
+			llenarTabla();
+		}
 	}
-	
-	
+
+
 	private void introducirFichero(){
 		JFileChooser jFileChooser = new JFileChooser("./Ficheros");
 		int resultado = jFileChooser.showOpenDialog(vista.getFrame());
@@ -180,6 +203,7 @@ public class ControladorMenu implements ActionListener{
 		vista.getBtnInsertar().setEnabled(true);
 		vista.getMnArchivo().setEnabled(true);
 		vista.getMntmCargarBd().setEnabled(true);
+		vista.getBtnBuscar().setEnabled(true);
 
 	}
 

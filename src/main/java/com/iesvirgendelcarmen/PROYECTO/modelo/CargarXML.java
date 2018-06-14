@@ -29,9 +29,17 @@ public class CargarXML {
 			for (int i = 0; i<list.size(); i++ ){
 				//Se obtiene cada nodo
 				Element node = (Element)list.get(i);
-				listaCiudades.add(new CiudadesDTO((Integer.parseInt(node.getChildText("id"))), node.getChildText("City"), 
-						node.getChildText("Country"), node.getChildText("Postal_Code") ,Double.parseDouble(node.getChildText("Latitude")) , 
-						Double.parseDouble(node.getChildText("Longitude"))));
+				try {
+					listaCiudades.add(new CiudadesDTO((Integer.parseInt(node.getChildText("id"))), node.getChildText("City"), 
+							node.getChildText("Country"), node.getChildText("Postal_Code") ,Double.parseDouble(node.getChildText("Latitude")) , 
+							Double.parseDouble(node.getChildText("Longitude"))));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Excepciones e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 		} catch ( IOException | JDOMException io ) {

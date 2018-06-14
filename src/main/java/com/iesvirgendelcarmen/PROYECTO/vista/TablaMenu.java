@@ -95,6 +95,7 @@ public class TablaMenu {
 		mntmAcercaDe = new JMenuItem("Acerca");
 		mnAcercaDe.add(mntmAcercaDe);
 		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		mntmAcercaDe.setVisible(true);
 
 		splitPane = new JSplitPane();
 		splitPane.setBackground(Color.DARK_GRAY);

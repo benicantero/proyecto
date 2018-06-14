@@ -1,0 +1,6 @@
+2018-06-14T13:13:49.406 - Error al insertar ciudad - ID: 0
+
+2018-06-14T13:17:32.824 - Error al insertar datos - ID: 0
+
+2018-06-14T13:17:44.181 - Error al insertar datos - ID: 0
+

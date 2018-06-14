@@ -11,7 +11,6 @@ public class Principal {
 			public void run() {
 				TablaMenu ventana = new TablaMenu();
 				ControladorMenu controlador = new ControladorMenu(ventana);
-
 			}
 		});
 	}

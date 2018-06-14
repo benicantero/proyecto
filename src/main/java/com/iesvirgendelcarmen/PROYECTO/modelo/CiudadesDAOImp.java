@@ -13,7 +13,8 @@ public class CiudadesDAOImp implements CiudadesDAO{
 	Connection conexion = Conexion.getConexion();
 	private Object[][] dataXml;
 	private String[] cabecerasColumnas = {"ID","CITY","COUNTRY","POSTAL CODE","LATITUDE","LONGITUDE","UPDATE"};
-
+	private CreateLogs shot = new CreateLogs();
+	
 	@Override
 	public void crearTabla() {
 
@@ -30,8 +31,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			Statement statement = conexion.createStatement();
 			statement.executeUpdate(sqlCrearBD);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			shot.hacerLog("Error el crear la bbdd. Base ya existe", 0);
 		}
 	}
 
@@ -47,7 +47,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			preparedST.setDouble(6, ciudad.getLongitude());
 			return preparedST.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			shot.hacerLog("Error al insertar datos", 0);
 			return false;
 		}
 	}
@@ -78,7 +78,7 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			preparedStatement.setInt(1, ciudad.getId());
 			return !preparedStatement.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			shot.hacerLog("Error borrado en BBDD", ciudad.getId());;
 		}
 		return false;
 	}
@@ -109,10 +109,9 @@ public class CiudadesDAOImp implements CiudadesDAO{
 			preparedStatement.setInt(6, ciudad.getId());			
 			return preparedStatement.execute();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			shot.hacerLog("Error al actualizar BBDD", ciudad.getId());
+			return false;
 		}
-
-		return false;
 	}
 
 	@Override
@@ -137,11 +136,15 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		try(PreparedStatement preparedStatement = conexion.prepareStatement(sqlListarCiudades);
 				ResultSet result = preparedStatement.executeQuery();) {
 			while (result.next()) {
-				lista.add(new CiudadesDTO(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
-						result.getDouble(5), result.getDouble(6)));
+				try {
+					lista.add(new CiudadesDTO(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
+							result.getDouble(5), result.getDouble(6)));
+				} catch (Exception e) {
+					shot.hacerLog("Fallo en lectura de BBDD", result.getInt(1));
+				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		}
 		return lista;
 	}
@@ -171,10 +174,14 @@ public class CiudadesDAOImp implements CiudadesDAO{
 		try (PreparedStatement preparedStatement = conexion.prepareStatement(sqlBuscarCiudades);){
 			preparedStatement.setString(1, ciudad);
 			ResultSet result = preparedStatement.executeQuery();
-			ciudadBuscada = new CiudadesDTO(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
-					result.getDouble(5), result.getDouble(6));
+			try {
+				ciudadBuscada = new CiudadesDTO(result.getInt(1), result.getString(2), result.getString(3), result.getString(4),
+						result.getDouble(5), result.getDouble(6));
+			} catch (Excepciones e) {
+				return null;
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return null;
 		}
 		return ciudadBuscada;
 	}

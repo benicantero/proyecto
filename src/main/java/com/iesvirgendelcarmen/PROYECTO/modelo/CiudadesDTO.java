@@ -9,17 +9,18 @@ public class CiudadesDTO {
 	private Double Latitude;
 	private Double Longitude;
 
-	public CiudadesDTO(int id, String City, String Country, String Postal_Code, Double Latitude, Double Longitude) {
-		super();
-		this.id = id;
-		this.City = City;
-		this.Country = Country;
-		this.Postal_Code = Postal_Code;
-		this.Latitude = Latitude;
-		this.Longitude = Longitude;
+	public CiudadesDTO(int id, String City, String Country, String Postal_Code, Double Latitude, Double Longitude) throws Excepciones {
+		if(id > 0) {
+			this.id = id;
+			this.City = City;
+			this.Country = Country;
+			this.Postal_Code = Postal_Code;
+			this.Latitude = Latitude;
+			this.Longitude = Longitude;
+		}else throw new Excepciones("No se ha creado ciudad");
 	}
 
-	
+
 	public String getCity() {
 		return City;
 	}
